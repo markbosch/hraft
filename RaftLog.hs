@@ -35,27 +35,21 @@ prevTerm :: LogState Int
 prevTerm = do
   log <- get
   let index = length log - 1
-  return $ getTerm . getAtIndex log $ index
-
-getAtIndex :: Log -> Int -> LogEntry
-getAtIndex log index = log !! index
-
-getTerm :: LogEntry -> Int
-getTerm (LogEntry term _) = term
+  return $ term (log !! index)
 
 appendAtIndex :: Int -> Log -> LogState ()
 appendAtIndex _ [] = return ()
 appendAtIndex index (entry:entries) = do
   log <- get
   let (before, after) = splitAt index log
-      newLog = before ++ [entry] ++ dropWhile (\x -> term x == term entry) after
-  put newLog
+      log' = before ++ [entry] ++ dropWhile (\x -> term x == term entry) after
+  put log'
   appendAtIndex (index + 1) entries
 
--- Tests
 runLogState :: LogState a -> Log -> (a, Log)
 runLogState = runState
 
+-- | Tests
 exampleEntries :: [LogEntry]
 exampleEntries = [LogEntry 1 "x"]
 
