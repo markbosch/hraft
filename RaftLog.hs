@@ -2,12 +2,8 @@ module RaftLog where
 
 import Control.Monad.State
 
-type Term = Int
+import RaftTypes
 
-data LogEntry = LogEntry
-  { term    :: Term
-  , command :: String
-  } deriving (Show, Eq)
 
 type Log = [LogEntry]
 type LogState a = State Log a
