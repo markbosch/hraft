@@ -34,9 +34,11 @@ new node = do
   m <- newMVar $ initial node
   return $ RaftState m
 
+updateFollowers :: Raft -> [Message]
 updateFollowers Raft{nodeNum, peers} =
   [newMessage nodeNum peer | peer <- peers]
   where
+    newMessage :: Node -> Node -> Message
     newMessage src dest =
       Message src dest 1 (AE (AppendEntries 0 0 [] 0))
 
